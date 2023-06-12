@@ -121,7 +121,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-# User
+# Определяем модель Пользователя
 AUTH_USER_MODEL = 'users.CustomUser'
 
 # Static files (CSS, JavaScript, Images)

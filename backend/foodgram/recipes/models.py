@@ -9,19 +9,23 @@ from django.db import models
 from users.models import CustomUser
 
 
-User = CustomUser
+# Определяем пользователя
+USER = CustomUser
 
 
 class Ingredient(models.Model):
     """
     Модель ингридиента для Рецепта (Recipe).
     """
-    # (string)
+    # REQ: Все поля обязательны для заполнения
+    # ReDoc: (string)
+    # REQ: Название
     name = models.CharField(
         'Название',
         max_length=200
     )
-    # (string - из data/ingredients.json)
+    # ReDoc: (string - из data/ingredients.json)
+    # REQ: Единицы измерения
     measurement_unit = models.CharField(
         'Единица измерения',
         max_length=200
@@ -38,15 +42,18 @@ class Ingredient(models.Model):
 
 class Tag(models.Model):
     """
-    Модель метки (тэга) для классификации Рецепта (Recipe).
+    Модель метки (тэга) для классификации Рецепта (Recipe)
     """
-    # ReDoc: Название (string <= 200 characters).
+    # REQ: Все поля обязательны для заполнения и уникальны
+    # ReDoc: Название (string <= 200 characters)
+    # REQ: Название
     name = models.CharField(
         'Название',
         max_length=200,
         unique=True,
     )
-    # ReDoc: Цвет в HEX (string or null <= 7 characters).
+    # ReDoc: Цвет в HEX (string or null <= 7 characters)
+    # REQ: Цветовой HEX-код (например, #49B64E)
     color = models.CharField(
         'Цветовой HEX-код',
         max_length=7,
@@ -62,6 +69,7 @@ class Tag(models.Model):
     )
     # ReDoc: Уникальный слаг
     # ReDoc: (string or null <= 200 characters ^[-a-zA-Z0-9_]+$).
+    # REQ: Slug
     # Валидиция выполняется на уровне "SlugField"
     slug = models.SlugField(
         'Slug',
@@ -82,34 +90,44 @@ class Recipe(models.Model):
     """
     Модель рецепта.
     """
-    # ReDoc: Список ингредиентов (Array of objects).
+    # REQ: Все поля обязательны для заполнения.
+    # ReDoc: Список ингредиентов (Array of objects)
+    # REQ: Ингредиенты: продукты для приготовления блюда по рецепту.
+    # REQ: Множественное поле, выбор из предустановленного списка,
+    # REQ: с указанием количества и единицы измерения
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
         through_fields=('recipe', 'ingredient'),
         verbose_name='Ингредиенты',
     )
-    # ReDoc: Список id тегов (Array of integers).
+    # ReDoc: Список id тегов (Array of integers)
+    # REQ: Тег (можно установить несколько тегов на один рецепт,
+    # REQ: выбор из предустановленных).
     tags = models.ManyToManyField(
         Tag,
         verbose_name='Теги',
     )
-    # ReDoc: Картинка, закодированная в Base64 (string <binary>).
+    # ReDoc: Картинка, закодированная в Base64 (string <binary>)
+    # REQ: Картинка
     image = models.ImageField(
         'Картинка',
         upload_to='recipes/',
         blank=True,
     )
-    # ReDoc Название (string <= 200 characters).
+    # ReDoc: Название (string <= 200 characters)
+    # REQ: Название
     name = models.CharField(
         'Название',
         max_length=200,
     )
     # ReDoc: Описание (string)
+    # REQ: Текстовое описание
     text = models.TextField(
         'Текстовое описание',
     )
-    # ReDoc: Время приготовления (в минутах) (integer >= 1).
+    # ReDoc: Время приготовления (в минутах) (integer >= 1)
+    # REQ: Время приготовления в минутах
     cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         validators=[
@@ -118,9 +136,9 @@ class Recipe(models.Model):
             )
         ]
     )
-    # Автор рецепта
+    # REQ: Автор публикации
     author = models.ForeignKey(
-        User,
+        USER,
         on_delete=models.CASCADE,
         related_name='recipes',
         verbose_name='Автор',
@@ -139,6 +157,7 @@ class RecipeIngredient(models.Model):
     """
     Модель количества Ингридиента (Ingredient) в Рецепте (Recipe).
     """
+    # REQ: Все поля обязательны для заполнения
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
@@ -151,6 +170,7 @@ class RecipeIngredient(models.Model):
         related_name='recipe_ingredient',
         verbose_name='Рецепт'
     )
+    # REQ: Количество
     amount = models.PositiveSmallIntegerField(
         'Количество',
         validators=[
@@ -185,7 +205,7 @@ class Favorite(models.Model):
     """
     # Авторизованный пользователь
     user = models.ForeignKey(
-        User,
+        USER,
         on_delete=models.CASCADE,
         related_name='favorites'
     )
@@ -213,7 +233,7 @@ class ShoppingCart(models.Model):
     Модель Списка покупок ингридиентов (Ingradient(s)).
     """
     user = models.ForeignKey(
-        User,
+        USER,
         on_delete=models.CASCADE,
         related_name='shopping_cart_user',
     )

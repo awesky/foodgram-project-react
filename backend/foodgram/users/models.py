@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
     Модель Пользователя (CustomUser).
     """
     # ReDoc: Адрес электронной почты (string <email> <= 254 characters)
+    # REQ: Email
     email = models.EmailField(
         'Электронная почта',
         max_length=254,
@@ -19,6 +20,7 @@ class CustomUser(AbstractUser):
         null=False,
     )
     # ReDoc: Уникальный юзернейм (string <= 150 characters ^[\w.@+-]+\z)
+    # REQ: Логин
     username = models.CharField(
         'Имя пользователя',
         max_length=150,
@@ -34,6 +36,7 @@ class CustomUser(AbstractUser):
         ],
     )
     # ReDoc: Имя (string <= 150 characters)
+    # REQ: Имя
     first_name = models.CharField(
         'Имя',
         max_length=150,
@@ -41,6 +44,7 @@ class CustomUser(AbstractUser):
         null=False,
     )
     # ReDoc: Фамилия (string <= 150 characters)
+    # REQ: Фамилия
     last_name = models.CharField(
         'Фамилия',
         max_length=150,
@@ -48,6 +52,7 @@ class CustomUser(AbstractUser):
         null=False
     )
     # ReDoc: Пароль (string <= 150 characters)
+    # REQ: Пароль
     password = models.CharField(
         'Пароль',
         max_length=150,
