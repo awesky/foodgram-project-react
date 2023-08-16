@@ -60,20 +60,23 @@ class CustomUser(AbstractUser):
         null=False,
     )
 
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ('username', 'first_name', 'last_name', 'password', )
+
     class Meta:
         ordering = ['id']
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
 
-class FollowerUser(models.Model):
+class Subscribtion(models.Model):
     """
     Модель подписки на автора Рецепта (Recipe.author).
     """
-    follower = models.ForeignKey(
+    user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name='follower',
+        related_name='user',
     )
     author = models.ForeignKey(
         CustomUser,
@@ -84,11 +87,11 @@ class FollowerUser(models.Model):
     class Meta:
         # Ограничение уникальности подписки на автора
         # для Пользователя (CustomUser)
-        constraints = (
+        constraints = [
             models.UniqueConstraint(
-                fields=('follower', 'author'),
-                name='unique_follow',
-            ),
-        )
+                fields=('user', 'author'),
+                name='unique_user_author',
+            )
+        ]
         verbose_name = 'Подписка на авторов'
         verbose_name_plural = 'Подписка на авторов'

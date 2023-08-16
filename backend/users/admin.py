@@ -3,7 +3,7 @@ from django.contrib import admin
 from . import models
 
 
-# Вывод "пустого" значения.
+# Отображение "пустого" значения.
 EMPTY_VALUE: str = '-пусто-'
 
 
@@ -22,11 +22,11 @@ class CustomUserAdmin(admin.ModelAdmin):
     empty_value_display = EMPTY_VALUE
 
 
-class FollowerUserAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'follower', 'author')
-    list_editable = ('follower', 'author')
+class SubscribtionAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', 'author')
+    list_editable = ('user', 'author')
     empty_value_display = EMPTY_VALUE
 
 
 admin.site.register(models.CustomUser, CustomUserAdmin)
-admin.site.register(models.FollowerUser, FollowerUserAdmin)
+admin.site.register(models.Subscribtion, SubscribtionAdmin)
