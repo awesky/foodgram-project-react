@@ -5,8 +5,8 @@ services:
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data/
-    env_file:
-      - ./.env
+    environment:
+      - 'DB_HOST:db'
 
   backend:
     image: awesky/foodgram-backend:1.00
