@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from . import models
 
-
 # Вывод "пустого" значения.
 EMPTY_VALUE: str = "-пусто-"
 

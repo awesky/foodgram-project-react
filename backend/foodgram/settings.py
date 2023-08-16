@@ -3,9 +3,9 @@ Django settings for foodgram project.
 """
 
 import os
-from dotenv import load_dotenv
 from pathlib import Path
 
+from dotenv import load_dotenv
 
 # Take environment varibles from .env
 load_dotenv()

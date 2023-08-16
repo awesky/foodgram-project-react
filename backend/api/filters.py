@@ -1,6 +1,6 @@
-from django_filters.rest_framework import filters, FilterSet
+from django_filters.rest_framework import FilterSet, filters
 
-from recipes.models import Ingredient, Recipe, Tag, CustomUser
+from recipes.models import CustomUser, Ingredient, Recipe, Tag
 
 
 # ReDoc: Поиск по частичному вхождению в начале названия ингредиента
