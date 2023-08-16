@@ -129,14 +129,14 @@ jobs:
             
             sudo echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             
-            sudo docker-compose stop
+            sudo docker compose stop
             
             sudo docker-compose rm backend
             sudo docker-compose pull backend
             sudo docker-compose rm frontend
             sudo docker-compose pull frontend
             
-            sudo docker-compose up -d --build
+            sudo docker compose up -d --build
 
             sudo docker-compose exec -T backend python manage.py makemigrations
             sudo docker-compose exec -T backend python manage.py migrate --noinput
