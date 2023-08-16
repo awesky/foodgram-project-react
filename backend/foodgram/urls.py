@@ -7,7 +7,7 @@ from django.urls import include, path
 
 urlpatterns = (
     # Роутинг инструментов администрирования
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     # Роутинг приложения api
-    path('api/', include('api.urls', namespace='api')),
+    path("api/", include("api.urls", namespace="api")),
 )

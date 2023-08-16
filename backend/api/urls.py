@@ -7,7 +7,7 @@ from rest_framework.routers import DefaultRouter
 from . import views
 
 # ReDoc: '/api/'
-app_name = 'api'
+app_name = "api"
 
 # Определение роутера api
 router_api = DefaultRouter()
@@ -16,19 +16,25 @@ router_api.register(
     # ReDoc: Мои подписки - GET
     # ReDoc: Подписаться на пользователя - POST, id
     # ReDoc: Отписаться от пользователя - DELETE, id
-    'users', views.CustomUserViewSet, basename='users'
+    "users",
+    views.CustomUserViewSet,
+    basename="users",
 )
 # ReDoc: 'tags/'
 router_api.register(
     # ReDoc: Cписок тегов - GET
     # ReDoc: Получение тега - GET, id
-    'tags', views.TagViewSet, basename='tags'
+    "tags",
+    views.TagViewSet,
+    basename="tags",
 )
 # ReDoc: 'ingredients/'
 router_api.register(
     # ReDoc: Список ингредиентов - GET
     # ReDoc: Получение ингредиента - GET, id
-    'ingredients', views.IngredientViewSet, basename='ingredients'
+    "ingredients",
+    views.IngredientViewSet,
+    basename="ingredients",
 )
 # ReDoc: 'recipes/'
 router_api.register(
@@ -42,14 +48,16 @@ router_api.register(
     # ReDoc: Добавить рецепт в список покупок - POST, id
     # ReDoc: Удалить рецепт из списка покупок - DELETE, id
     # ReDoc: Скачать список покупок - GET
-    'recipes', views.RecipeViewSet, basename='recipes'
+    "recipes",
+    views.RecipeViewSet,
+    basename="recipes",
 )
 
 urlpatterns = [
     # api
-    path('', include(router_api.urls)),
+    path("", include(router_api.urls)),
     # Djoser
     # https://djoser.readthedocs.io/en/latest/authentication_backends.html
-    path('', include('djoser.urls')),
-    re_path(r'auth/', include('djoser.urls.authtoken')),
+    path("", include("djoser.urls")),
+    re_path(r"auth/", include("djoser.urls.authtoken")),
 ]

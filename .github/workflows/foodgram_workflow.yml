@@ -58,7 +58,6 @@ jobs:
           target: './'
           strip_components: 1
 
-
   build_and_push_backend_to_docker_hub:
     name: Pushing backend image to DockerHub
     runs-on: ubuntu-latest

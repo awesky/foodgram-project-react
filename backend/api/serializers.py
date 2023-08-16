@@ -1,4 +1,3 @@
-
 from django.shortcuts import get_object_or_404
 
 from djoser.serializers import UserSerializer
@@ -6,46 +5,51 @@ from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import (ImageField,
-                                        IntegerField,
-                                        ModelSerializer,
-                                        PrimaryKeyRelatedField,
-                                        ReadOnlyField,
-                                        SerializerMethodField)
+from rest_framework.serializers import (
+    ImageField,
+    IntegerField,
+    ModelSerializer,
+    PrimaryKeyRelatedField,
+    ReadOnlyField,
+    SerializerMethodField,
+)
 
-from recipes.models import (Ingredient,
-                            Favorite,
-                            Recipe,
-                            RecipeIngredient,
-                            ShoppingCart,
-                            Tag)
+from recipes.models import (
+    Ingredient,
+    Favorite,
+    Recipe,
+    RecipeIngredient,
+    ShoppingCart,
+    Tag,
+)
 from users.models import CustomUser, Subscribtion
 
 
 class CustomUserSerializer(UserSerializer):
-    """"
+    """ "
     Серилизатор модели Пользователя (CustomUser).
     """
+
     is_subscribed = SerializerMethodField()
 
     class Meta:
         model = CustomUser
         fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'password',
-            'is_subscribed',
+            "email",
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "password",
+            "is_subscribed",
         )
         extra_kwargs = {
-            'password': {'write_only': True},
-            'is_subscribed': {'read_only': True}
+            "password": {"write_only": True},
+            "is_subscribed": {"read_only": True},
         }
 
     def get_is_subscribed(self, obj):
-        user = self.context.get('request').user
+        user = self.context.get("request").user
         if user.is_anonymous:
             return None
         return Subscribtion.objects.filter(user=user, author=obj).exists()
@@ -63,7 +67,12 @@ class SubscribtionRecipeListSerializer(ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'cooking_time', 'image', )
+        fields = (
+            "id",
+            "name",
+            "cooking_time",
+            "image",
+        )
 
 
 # ReDoc: Мои подписки - GET
@@ -74,11 +83,12 @@ class SubscribtionSerializer(ModelSerializer):
     Обеспечивает обработку GET и POST-запросов:
     обработка Подписки (Subscription) Пользователя (CustomUser).
     """
-    email = ReadOnlyField(source='author.email')
-    id = ReadOnlyField(source='author.id')
-    username = ReadOnlyField(source='author.username')
-    first_name = ReadOnlyField(source='author.first_name')
-    last_name = ReadOnlyField(source='author.last_name')
+
+    email = ReadOnlyField(source="author.email")
+    id = ReadOnlyField(source="author.id")
+    username = ReadOnlyField(source="author.username")
+    first_name = ReadOnlyField(source="author.first_name")
+    last_name = ReadOnlyField(source="author.last_name")
     is_subscribed = SerializerMethodField()
     recipes = SerializerMethodField()
     recipes_count = SerializerMethodField()
@@ -89,26 +99,30 @@ class SubscribtionSerializer(ModelSerializer):
             # ReDoc: ("email", "id", "username",
             # "first_name", "last_name", "is_subscribed",
             # "recipes", "recipes_count")
-            'email', 'id', 'username',
-            'first_name', 'last_name', 'is_subscribed',
-            'recipes', 'recipes_count',
+            "email",
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "is_subscribed",
+            "recipes",
+            "recipes_count",
         )
 
     def get_is_subscribed(self, obj):
         """Возвращает значение существования Подписки (Subscription)."""
         return Subscribtion.objects.filter(
-            user=obj.user,
-            author=obj.author
+            user=obj.user, author=obj.author
         ).exists()
 
     def get_recipes(self, obj):
         """Возвращает Рецепты (Recipies) автора."""
-        request = self.context.get('request')
+        request = self.context.get("request")
         queryset = Recipe.objects.filter(author=obj.author)
         # ReDoc: Количество объектов внутри поля recipes
-        limit = request.GET.get('recipes_limit')
+        limit = request.GET.get("recipes_limit")
         if limit:
-            queryset = queryset[:int(limit)]
+            queryset = queryset[: int(limit)]
         return SubscribtionRecipeListSerializer(queryset, many=True).data
 
     def get_recipes_count(self, obj):
@@ -128,7 +142,11 @@ class IngredientSerializer(ModelSerializer):
     class Meta:
         model = Ingredient
         # ReDoc: "id", "name", "measurement_unit"
-        fields = ('id', 'name', 'measurement_unit', )
+        fields = (
+            "id",
+            "name",
+            "measurement_unit",
+        )
         read_only_fields = fields
 
 
@@ -144,7 +162,12 @@ class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
         # ReDoc: "id", "name", "color", "slug"
-        fields = ('id', 'name', 'color', 'slug', )
+        fields = (
+            "id",
+            "name",
+            "color",
+            "slug",
+        )
         read_only_fields = fields
 
 
@@ -153,13 +176,19 @@ class RecipeIngredientReadSerializer(ModelSerializer):
     Вложенный сериализатор для RecipeReadSerialize.
     Обеспечивает чтение Ингридиента (Ingredient) из Рецепта (Recipe).
     """
-    id = ReadOnlyField(source='ingredient.id')
-    name = ReadOnlyField(source='ingredient.name')
-    measurement_unit = ReadOnlyField(source='ingredient.measurement_unit')
+
+    id = ReadOnlyField(source="ingredient.id")
+    name = ReadOnlyField(source="ingredient.name")
+    measurement_unit = ReadOnlyField(source="ingredient.measurement_unit")
 
     class Meta:
         model = RecipeIngredient
-        fields = ('id', 'name', 'measurement_unit', 'amount', )
+        fields = (
+            "id",
+            "name",
+            "measurement_unit",
+            "amount",
+        )
 
 
 # ReDoc: Список рецептов - GET
@@ -169,10 +198,11 @@ class RecipeReadSerializer(ModelSerializer):
     Сериализатор чтения для модели Рецепта (Recipe).
     Обеспечивает обработку GET запросов.
     """
+
     # Проверить author после создания сериализатора для User
     author = CustomUserSerializer(read_only=True)
     ingredients = RecipeIngredientReadSerializer(
-        many=True, read_only=True, source='recipe_ingredient'
+        many=True, read_only=True, source="recipe_ingredient"
     )
     tags = TagSerializer(many=True, read_only=True)
     # ReDoc: is_favorited (boolean)
@@ -187,28 +217,37 @@ class RecipeReadSerializer(ModelSerializer):
         # "is_favorited", "is_in_shopping_cart",
         # "name", "image", "text", "cooking_time")
         fields = (
-            'id', 'tags', 'author', 'ingredients',
-            'is_favorited', 'is_in_shopping_cart',
-            'name', 'image', 'text', 'cooking_time',
+            "id",
+            "tags",
+            "author",
+            "ingredients",
+            "is_favorited",
+            "is_in_shopping_cart",
+            "name",
+            "image",
+            "text",
+            "cooking_time",
         )
         read_only_fields = fields
 
     # Определение метода для "is_favorited"
     def get_is_favorited(self, obj):
         """Проверка наличия в Избранном (Favorite)."""
-        request = self.context.get('request')
+        request = self.context.get("request")
         return (
-            request.user.is_authenticated and
-            Favorite.objects.filter(user=request.user, recipe=obj).exists()
+            request.user.is_authenticated
+            and Favorite.objects.filter(user=request.user, recipe=obj).exists()
         )
 
     # Определение метода для "is_in_shopping_cart"
     def get_is_in_shopping_cart(self, obj):
         """Проверка наличия в Спискe покупок (ShoppingCart)."""
-        request = self.context.get('request')
+        request = self.context.get("request")
         return (
-            request.user.is_authenticated and
-            ShoppingCart.objects.filter(user=request.user, recipe=obj).exists()
+            request.user.is_authenticated
+            and ShoppingCart.objects.filter(
+                user=request.user, recipe=obj
+            ).exists()
         )
 
 
@@ -218,11 +257,15 @@ class RecipeIngredientWriteSerializer(ModelSerializer):
     Обеспечивает работу с моделью связи
     Рецепта (Recipe) и Ингридиента (Ingredient)(RecipeIngredien).
     """
+
     id = PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
     class Meta:
         model = RecipeIngredient
-        fields = ('id', 'amount', )
+        fields = (
+            "id",
+            "amount",
+        )
 
 
 # ReDoc: Создание рецепта - POST
@@ -233,9 +276,11 @@ class RecipeWriteSerializer(ModelSerializer):
     Сериализатор записи (удаления) для модели Рецепта (Recipe).
     Обеспечивает обработку POST, PATCH и DELETE-запросов.
     """
+
     ingredients = RecipeIngredientWriteSerializer(many=True)
     tags = PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(), many=True,
+        queryset=Tag.objects.all(),
+        many=True,
     )
     image = Base64ImageField()
 
@@ -244,51 +289,55 @@ class RecipeWriteSerializer(ModelSerializer):
         fields = (
             # ReDoc: ("ingredients", "tags", "image",
             # "name": "string", "text", "cooking_time")
-            'ingredients', 'tags', 'image',
-            'name', 'text', 'cooking_time',
+            "ingredients",
+            "tags",
+            "image",
+            "name",
+            "text",
+            "cooking_time",
         )
 
     def validate_ingredients(self, value):
-        """"
+        """ "
         Валидирует назначение Ингредиентов (Ingredient) Рецепту (Recipes).
         """
         if not value:
             raise ValidationError(
-                {'ingredients': 'Рецепт не может быть без ингредиентов!'})
+                {"ingredients": "Рецепт не может быть без ингредиентов!"}
+            )
         ingredients_list = []
-        error_msg = ''
+        error_msg = ""
         for item in value:
-            err = ''
-            ingredient = get_object_or_404(Ingredient, name=item['id'])
+            err = ""
+            ingredient = get_object_or_404(Ingredient, name=item["id"])
             if ingredient in ingredients_list:
                 err += f'Ингредиент "{ingredient.name}" повторяется.'
             error_msg += err
             ingredients_list.append(ingredient)
             if error_msg:
-                raise ValidationError({'ingredients': error_msg})
+                raise ValidationError({"ingredients": error_msg})
         return value
 
     def validate_tags(self, value):
-        """"
+        """ "
         Валидирует назначение Тэгов (Tag) Рецепту (Recipes).
         """
         if not value:
-            raise ValidationError(
-                {'tags': 'Нужно указать хотя бы один тег!'})
+            raise ValidationError({"tags": "Нужно указать хотя бы один тег!"})
         tags_list = []
-        error_msg = ''
+        error_msg = ""
         for tag in value:
-            err = ''
+            err = ""
             if tag in tags_list:
-                err += (f'Тег {tag.name} повторяется!\n')
+                err += f"Тег {tag.name} повторяется!\n"
             error_msg += err
             tags_list.append(tag)
         if error_msg:
-            raise ValidationError({'tags': error_msg})
+            raise ValidationError({"tags": error_msg})
         return value
 
     def take_ingredients_tags(self, recipe, ingredients, tags):
-        """"
+        """ "
         Создает связи между:
         Рецептом (Recipe) и Ингридиентами (Ingredient),
         Рецептом (Recipe) и Тегами (Tag).
@@ -296,28 +345,26 @@ class RecipeWriteSerializer(ModelSerializer):
         for ingredient in ingredients:
             RecipeIngredient.objects.update_or_create(
                 recipe=recipe,
-                ingredient=ingredient['id'],
-                amount=ingredient['amount'],
+                ingredient=ingredient["id"],
+                amount=ingredient["amount"],
             )
         recipe.tags.set(tags)
 
     def create(self, validated_data):
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop("ingredients")
+        tags = validated_data.pop("tags")
         recipe = Recipe.objects.create(
-            author=self.context['request'].user,
+            author=self.context["request"].user,
             **validated_data,
         )
         self.take_ingredients_tags(
-            recipe=recipe,
-            ingredients=ingredients,
-            tags=tags
+            recipe=recipe, ingredients=ingredients, tags=tags
         )
         return recipe
 
     def update(self, instance, validated_data):
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop("ingredients")
+        tags = validated_data.pop("tags")
         instance.ingredients.clear()
         instance.tags.clear()
         self.take_ingredients_tags(
@@ -335,16 +382,20 @@ class RecipeWriteSerializer(ModelSerializer):
 # ReDoc: Удалить рецепт из избранного - DELETE, id
 class FavoriteSerializer(ModelSerializer):
     """Сериализатор модели Избранного (Favorite)."""
-    id = PrimaryKeyRelatedField(source='recipe', read_only=True)
-    name = ReadOnlyField(source='recipe.name')
-    image = ImageField(source='recipe.image', read_only=True)
-    cooking_time = IntegerField(source='recipe.cooking_time', read_only=True)
+
+    id = PrimaryKeyRelatedField(source="recipe", read_only=True)
+    name = ReadOnlyField(source="recipe.name")
+    image = ImageField(source="recipe.image", read_only=True)
+    cooking_time = IntegerField(source="recipe.cooking_time", read_only=True)
 
     class Meta:
         model = Favorite
         fields = (
             # ReDoc: "id", "name", "image", "cooking_time"
-            'id', 'name', 'image', 'cooking_time',
+            "id",
+            "name",
+            "image",
+            "cooking_time",
         )
 
 
@@ -352,14 +403,18 @@ class FavoriteSerializer(ModelSerializer):
 # ReDoc: Удалить рецепт из списка покупок - DELETE, id
 class ShoppingCartSerializer(ModelSerializer):
     """Сериализатор модели Списка покупок (ShoppingCart)."""
-    id = PrimaryKeyRelatedField(source='recipe', read_only=True)
-    name = ReadOnlyField(source='recipe.name')
-    image = ImageField(source='recipe.image', read_only=True)
-    cooking_time = IntegerField(source='recipe.cooking_time', read_only=True)
+
+    id = PrimaryKeyRelatedField(source="recipe", read_only=True)
+    name = ReadOnlyField(source="recipe.name")
+    image = ImageField(source="recipe.image", read_only=True)
+    cooking_time = IntegerField(source="recipe.cooking_time", read_only=True)
 
     class Meta:
         model = ShoppingCart
         fields = (
             # ReDoc: "id", "name", "image", "cooking_time"
-            'id', 'name', 'image', 'cooking_time',
+            "id",
+            "name",
+            "image",
+            "cooking_time",
         )
