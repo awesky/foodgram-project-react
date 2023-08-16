@@ -22,7 +22,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='Empty')
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['130.193.53.150']
 
 
 # Application definition
