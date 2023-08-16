@@ -1,3 +1,0 @@
-""""
-Foodgram variables.
-"""
