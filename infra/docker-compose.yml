@@ -1,7 +1,8 @@
 version: '3.8'
 services:
-  database:
+  db:
     image: postgres:13.0-alpine
+    container_name: db
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data/
@@ -15,7 +16,9 @@ services:
       - static_value:/app/static/
       - media_value:/app/media/
     depends_on:
-      - database
+      - db
+    links:
+      - db:db
     env_file:
       - ./.env
 
