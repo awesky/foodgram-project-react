@@ -5,7 +5,7 @@ services:
     container_name: db
     restart: always
     volumes:
-      - db_data:/var/lib/postgresql/data/
+      - db_data:/var/lib/db/data/
     env_file:
       - ./.env
 
