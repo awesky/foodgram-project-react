@@ -24,24 +24,16 @@ __<details><summary>Запуск проекта на удаленном серв
 
 1. Клонируйте репозиторий ([официальная документация](https://docs.github.com/ru/repositories/creating-and-managing-repositories/cloning-a-repository))
     
-3. Подключитесь к удаленному серверу
+2. Подключитесь к удаленному серверу
 
     <sub>_(пример для пользователя "customuser" и публичного IP-адреса сервера "84.201.161.196")_</sub>
     ```
     ssh customuser@84.201.161.196
     ```
 
-4. Установите Docker ([официальная документация](https://docs.docker.com/engine/install/))
+3. Установите Docker ([официальная документация](https://docs.docker.com/engine/install/))
 
-5. Скопируйте необходимые файлы на сервер
-    
-    <sub>_(пример для пользователя "customuser" и публичного IP-адреса сервера "84.201.161.196")_</sub>
-    ```
-    scp docker-compose.yml nginx.conf customuser@84.201.161.196:/home/customuser/
-    ```
-    
-
-6. Задайте значения переменным в GitHub - Settings - (Secuity) Secrets and variables - Actions
+4. Задайте значения переменным в GitHub - Settings - (Secuity) Secrets and variables - Actions
 
     ```SECRET_KEY```      секретный ключ Django-проекта
     
@@ -59,23 +51,23 @@ __<details><summary>Запуск проекта на удаленном серв
     
     ```DB_HOST```         db (установить указанное значение)
 
-7. Запустите GitHub Workflow ([официальная документация](https://docs.github.com/ru/actions/using-workflows/manually-running-a-workflow))
+5. Запустите GitHub Workflow ([официальная документация](https://docs.github.com/ru/actions/using-workflows/manually-running-a-workflow))
 
-9. Сервис будет доступен по адресу: [http://84.201.161.196/](http://84.201.161.196/)
+6. Сервис будет доступен по адресу: [http://84.201.161.196/](http://84.201.161.196/)
 
     <sup>_(пример для сервера с публичным IP-адресом "84.201.161.196")_</sup>
     
-10. Создайте суперпользователя для администрирования проекта на сервере
+7. Создайте суперпользователя для администрирования проекта на сервере
     
     ```
     sudo docker-compose exec backend python manage.py createsuperuser
     ```
 
-11. Панель администратора доступна по адресу: [http://84.201.161.196/admin](http://84.201.161.196/admin)
+8. Панель администратора доступна по адресу: [http://84.201.161.196/admin](http://84.201.161.196/admin)
 
     <sup>_(пример для сервера с публичным IP-адресом "84.201.161.196")_</sup>
     
-12. (По желанию) загрузите подготовленную базу ингредиентов
+9. (По желанию) загрузите подготовленную базу ингредиентов
     
     ```
     sudo docker-compose exec backend python manage.py load_ingredients
