@@ -2,7 +2,6 @@ version: '3.8'
 services:
   db:
     image: postgres:15.0-alpine
-    container_name: db
     restart: always
     volumes:
       - db_data:/var/lib/db/data/
@@ -17,8 +16,6 @@ services:
       - media_value:/app/media/
     depends_on:
       - db
-    links:
-      - db:db
     env_file:
       - ./.env
 
