@@ -132,7 +132,6 @@ jobs:
             
             sudo docker-compose stop
             
-            sudo docker-compose rm db
             sudo docker-compose rm backend
             sudo docker-compose pull backend
             sudo docker-compose rm frontend
