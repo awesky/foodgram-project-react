@@ -1,56 +1,86 @@
 <sub>Заполнениние README.md выполнено на GitHub с применением разметки [Markdown](https://docs.github.com/ru/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).</sub>
 
+![Workflow status](https://github.com/awesky/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+
 __<details><summary>Описание</summary>__
+
 Cайт Foodgram, «Продуктовый помощник».
+
 На этом сервисе пользователи смогут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 </details>
 
+__<details><summary>Технологии</summary>__
+
+- [x] Python
+- [x] Django
+- [x] Django REST Framework
+- [x] Nginx
+- [x] Gunicorn
+- [x] Docker
+      
+</details>
+
 __<details><summary>Запуск проекта на удаленном сервере</summary>__
-Подключитесь к удаленному серверу
-```ssh customuser@84.201.161.196```
-(пример для пользователя customuser и адреса сервера 84.201.161.196)
 
-Установите Docker ([официальная документация](https://docs.docker.com/engine/install/))
+1. Клонируйте репозиторий ([официальная документация](https://docs.github.com/ru/repositories/creating-and-managing-repositories/cloning-a-repository))
+    
+3. Подключитесь к удаленному серверу
 
-Скопируйте необходимые файлы на сервер
-```
-scp docker-compose.yml nginx.conf customuser@84.201.161.196:/home/customuser/
-```
-(пример для пользователя customuser и адреса сервера 84.201.161.196)
+    <sub>_(пример для пользователя "customuser" и публичного IP-адреса сервера "84.201.161.196")_</sub>
+    ```
+    ssh customuser@84.201.161.196
+    ```
 
-Задайте значения переменным в GitHub - Settings - (Secuity) Secrets and variables - Actions
-```
-SECRET_KEY              - _секретный ключ Django-проекта_
-```
-```
-HOST                    - _публичный IP сервера_
-```
-```
-USER                    - _имя пользователя на сервере_
-```
-```
-SSH_KEY                 - приватный ssh-ключ
-```
-```
-PASSPHRASE              - _пароль ssh-ключа_
-```
-```
-DOCKER_PASSWORD         - _пароль от DockerHub_
-```
-```
-DOCKER_USERNAME         - _логин DockerHub_
-```
-```
-DB_HOST                 - db
-```
+4. Установите Docker ([официальная документация](https://docs.docker.com/engine/install/))
 
-Запустите GitHub Workflow ([официальная документация](https://docs.github.com/ru/actions/using-workflows/manually-running-a-workflow))
+5. Скопируйте необходимые файлы на сервер
+    
+    <sub>_(пример для пользователя "customuser" и публичного IP-адреса сервера "84.201.161.196")_</sub>
+    ```
+    scp docker-compose.yml nginx.conf customuser@84.201.161.196:/home/customuser/
+    ```
+    
 
-Создайте суперпользователя для администрирования проекта на сервере
-```sudo docker-compose exec backend python manage.py createsuperuser```
+6. Задайте значения переменным в GitHub - Settings - (Secuity) Secrets and variables - Actions
 
-По желанию загрузите подготовленную базу ингредиентов
-```sudo docker-compose exec backend python manage.py load_ingredients```
+    ```SECRET_KEY```      секретный ключ Django-проекта
+    
+    ```HOST```            публичный IP сервера
+    
+    ```USER```            имя пользователя на сервере
+    
+    ```SSH_KEY```         приватный ssh-ключ
+    
+    ```PASSPHRASE```      пароль ssh-ключа
+    
+    ```DOCKER_PASSWORD``` пароль от DockerHub
+    
+    ```DOCKER_USERNAME``` логин DockerHub
+    
+    ```DB_HOST```         db (установить указанное значение)
+
+7. Запустите GitHub Workflow ([официальная документация](https://docs.github.com/ru/actions/using-workflows/manually-running-a-workflow))
+
+9. Сервис будет доступен по адресу: [http://84.201.161.196/](http://84.201.161.196/)
+
+    <sup>_(пример для сервера с публичным IP-адресом "84.201.161.196")_</sup>
+    
+10. Создайте суперпользователя для администрирования проекта на сервере
+    
+    ```
+    sudo docker-compose exec backend python manage.py createsuperuser
+    ```
+
+11. Панель администратора доступна по адресу: [http://84.201.161.196/admin](http://84.201.161.196/admin)
+
+    <sup>_(пример для сервера с публичным IP-адресом "84.201.161.196")_</sup>
+    
+12. (По желанию) загрузите подготовленную базу ингредиентов
+    
+    ```
+    sudo docker-compose exec backend python manage.py load_ingredients
+    ```
+    
 </details>
 
 > ## Автор
