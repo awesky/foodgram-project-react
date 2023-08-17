@@ -6,6 +6,7 @@ from rest_framework.routers import DefaultRouter
 
 from . import views
 
+
 # ReDoc: '/api/'
 app_name = "api"
 

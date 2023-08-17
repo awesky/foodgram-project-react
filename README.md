@@ -1,38 +1,57 @@
-# praktikum_new_diplom
+<sub>Заполнениние README.md выполнено на GitHub с применением разметки [Markdown](https://docs.github.com/ru/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).</sub>
 
-БУДЕТ ДОПОЛНЕН КО "2 ЭТАПУ".
+__<details><summary>Описание</summary>__
+Cайт Foodgram, «Продуктовый помощник».
+На этом сервисе пользователи смогут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
+</details>
 
-Разворачивание проекта на удаленном сервере:
-Подключение к удаленному серверу
+__<details><summary>Запуск проекта на удаленном сервере</summary>__
+Подключитесь к удаленному серверу
+```ssh customuser@84.201.161.196```
+(пример для пользователя customuser и адреса сервера 84.201.161.196)
 
-Установка Docker
-Update the apt package index and install packages to allow apt to use a repository over HTTPS:
+Установите Docker ([официальная документация](https://docs.docker.com/engine/install/))
 
- sudo apt-get update
- sudo apt-get install ca-certificates curl gnupg
+Скопируйте необходимые файлы на сервер
+```
+scp docker-compose.yml nginx.conf customuser@84.201.161.196:/home/customuser/
+```
+(пример для пользователя customuser и адреса сервера 84.201.161.196)
 
+Задайте значения переменным в GitHub - Settings - (Secuity) Secrets and variables - Actions
+```
+SECRET_KEY              - _секретный ключ Django-проекта_
+```
+```
+HOST                    - _публичный IP сервера_
+```
+```
+USER                    - _имя пользователя на сервере_
+```
+```
+SSH_KEY                 - приватный ssh-ключ
+```
+```
+PASSPHRASE              - _пароль ssh-ключа_
+```
+```
+DOCKER_PASSWORD         - _пароль от DockerHub_
+```
+```
+DOCKER_USERNAME         - _логин DockerHub_
+```
+```
+DB_HOST                 - db
+```
 
-Add Docker’s official GPG key:
+Запустите GitHub Workflow ([официальная документация](https://docs.github.com/ru/actions/using-workflows/manually-running-a-workflow))
 
- sudo install -m 0755 -d /etc/apt/keyrings
- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
- sudo chmod a+r /etc/apt/keyrings/docker.gpg
+Создайте суперпользователя для администрирования проекта на сервере
+```sudo docker-compose exec backend python manage.py createsuperuser```
 
+По желанию загрузите подготовленную базу ингредиентов
+```sudo docker-compose exec backend python manage.py load_ingredients```
+</details>
 
-Use the following command to set up the repository:
-
- echo \
-  "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-
-Install Docker Engine
-Install Docker Engine, containerd, and Docker Compose.
-
-To install the latest version, run:
-
-    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-
-Разворовачивание проекта локально:
+> ## Автор
+> - [x] Made by awesky ([GitHub](https://github.com/awesky)) within [Yandex.Practicum](https://practicum.yandex.ru/) on August 2023.

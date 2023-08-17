@@ -88,6 +88,9 @@ class Subscribtion(models.Model):
         related_name="author",
     )
 
+    def __str__(self):
+        return f"{self.user} подписан на {self.author}"
+
     class Meta:
         # Ограничение уникальности подписки на автора
         # для Пользователя (CustomUser)

@@ -305,7 +305,7 @@ class RecipeWriteSerializer(ModelSerializer):
         return value
 
     def validate_tags(self, value):
-        """ "
+        """
         Валидирует назначение Тэгов (Tag) Рецепту (Recipes).
         """
         if not value:

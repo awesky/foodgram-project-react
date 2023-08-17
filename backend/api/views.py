@@ -60,9 +60,10 @@ class CustomUserViewSet(UserViewSet):
             return Response(
                 {"errors": message}, status=status.HTTP_400_BAD_REQUEST
             )
+        is_subscribed = Subscribtion.objects.filter(user=user, author=author)
         # Блок POST-запроса
         if self.request.method == "POST":
-            if Subscribtion.objects.filter(user=user, author=author).exists():
+            if is_subscribed:
                 return Response(
                     {
                         "errors": (
@@ -80,11 +81,8 @@ class CustomUserViewSet(UserViewSet):
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         # Блок DELETE-запроса
-        if Subscribtion.objects.filter(user=user, author=author).exists():
-            subscribtion = get_object_or_404(
-                Subscribtion, user=user, author=author
-            )
-            subscribtion.delete()
+        if is_subscribed:
+            is_subscribed.delete()
             return Response(
                 "Успешная отписка", status=status.HTTP_204_NO_CONTENT
             )
