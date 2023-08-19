@@ -292,16 +292,22 @@ class RecipeWriteSerializer(ModelSerializer):
                 {"ingredients": "Рецепт не может быть без ингредиентов!"}
             )
         ingredients_list = []
-        error_msg = ""
+        error_msg = []
         for item in value:
-            err = ""
             ingredient = get_object_or_404(Ingredient, name=item["id"])
+            err = []
             if ingredient in ingredients_list:
-                err += f'Ингредиент "{ingredient.name}" повторяется.'
-            error_msg += err
+                err.append(f"Ингредиент id={ingredient.id} повторяется.")
+            if int(item["amount"]) < 1:
+                err.append(
+                    f"Ингредиента id={ingredient.id} должно быть больше 0."
+                )
+            if err:
+                error_msg.append(err)
             ingredients_list.append(ingredient)
-            if error_msg:
-                raise ValidationError({"ingredients": error_msg})
+
+        if error_msg:
+            raise ValidationError(error_msg)
         return value
 
     def validate_tags(self, value):

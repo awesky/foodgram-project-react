@@ -168,7 +168,10 @@ class RecipeIngredient(models.Model):
     )
     # REQ: Количество
     amount = models.PositiveSmallIntegerField(
-        "Количество", validators=[MaxValueValidator(1000)]
+        "Количество", validators=[
+            # MinValueValidator(1),
+            MaxValueValidator(1000)
+        ]
     )
 
     def __str__(self):
