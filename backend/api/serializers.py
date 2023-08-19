@@ -3,6 +3,7 @@ from djoser.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tag)
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import (ImageField, IntegerField,
                                         ModelSerializer,
@@ -80,40 +81,39 @@ class SubscribtionSerializer(ModelSerializer):
     recipes_count = SerializerMethodField()
 
     class Meta:
-        model = Subscribtion
+        model = CustomUser
         fields = (
             # ReDoc: ("email", "id", "username",
             # "first_name", "last_name", "is_subscribed",
             # "recipes", "recipes_count")
-            "email",
-            "id",
-            "username",
-            "first_name",
-            "last_name",
-            "is_subscribed",
-            "recipes",
-            "recipes_count",
+            "email", "id", "username",
+            "first_name", "last_name", "is_subscribed",
+            "recipes", "recipes_count",
         )
 
     def get_is_subscribed(self, obj):
         """Возвращает значение существования Подписки (Subscription)."""
-        return Subscribtion.objects.filter(
-            user=obj.user, author=obj.author
-        ).exists()
+        return obj.author.recipes.exists()
 
     def get_recipes(self, obj):
         """Возвращает Рецепты (Recipies) автора."""
         request = self.context.get("request")
-        queryset = Recipe.objects.filter(author=obj.author)
+        recipes = obj.author.recipes.all()
         # ReDoc: Количество объектов внутри поля recipes
-        limit = request.GET.get("recipes_limit")
-        if limit:
-            queryset = queryset[: int(limit)]
-        return SubscribtionRecipeListSerializer(queryset, many=True).data
+        recipes_limit = request.GET.get("recipes_limit")
+        if recipes_limit is not None:
+            try:
+                recipes_limit = int(recipes_limit)
+            except ValueError:
+                raise ValidationError(
+                    detail="recipes_limit: Ожидается целое число",
+                    code=status.HTTP_400_BAD_REQUEST)
+            recipes = recipes[:recipes_limit]
+        return SubscribtionRecipeListSerializer(recipes, many=True).data
 
     def get_recipes_count(self, obj):
         """Возвращает количество Рецептов (Recipies) автора."""
-        return Recipe.objects.filter(author=obj.author).count()
+        return obj.author.recipes.count()
 
 
 # ReDoc: Список ингредиентов - GET

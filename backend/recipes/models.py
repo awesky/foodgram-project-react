@@ -92,14 +92,14 @@ class Recipe(models.Model):
     # REQ: выбор из предустановленных).
     tags = models.ManyToManyField(
         Tag,
-        related_name="recipe",
+        related_name="recipes",
         verbose_name="Теги",
     )
     # REQ: Автор публикации
     author = models.ForeignKey(
         USER,
         on_delete=models.CASCADE,
-        related_name="recipe",
+        related_name="recipes",
         verbose_name="Автор",
     )
     # REQ: Все поля обязательны для заполнения.
@@ -109,9 +109,8 @@ class Recipe(models.Model):
     # с указанием количества и единицы измерения
     ingredients = models.ManyToManyField(
         Ingredient,
-        related_name="recipe",
+        related_name="recipes",
         through="RecipeIngredient",
-        # through_fields=('recipe', 'ingredient'),
         verbose_name="Ингредиенты",
     )
     # ReDoc: Название (string <= 200 characters)

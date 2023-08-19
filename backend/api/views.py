@@ -37,8 +37,8 @@ class CustomUserViewSet(UserViewSet):
         Возвращает пользователей, на которых подписан текущий пользователь.
         В выдачу добавляются рецепты.
         """
-        queryset = Subscribtion.objects.filter(user=request.user)
-        pages = self.paginate_queryset(queryset)
+        subscribtions = Subscribtion.objects.filter(user=request.user)
+        pages = self.paginate_queryset(subscribtions)
         serializer = SubscribtionSerializer(
             pages, many=True, context={"request": request}
         )
@@ -63,7 +63,9 @@ class CustomUserViewSet(UserViewSet):
             return Response(
                 {"errors": message}, status=status.HTTP_400_BAD_REQUEST
             )
-        is_subscribed = Subscribtion.objects.filter(user=user, author=author)
+        is_subscribed = Subscribtion.objects.filter(
+            user=user, author=author
+        ).exists()
         # Блок POST-запроса
         if self.request.method == "POST":
             if is_subscribed:
@@ -84,14 +86,8 @@ class CustomUserViewSet(UserViewSet):
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         # Блок DELETE-запроса
-        # Согласно ReDoc в случае некорректного запроса
-        # требуется выдать ошибку 400 с описанием причины:
-        # "Reoc: 400 Ошибка подписки (Например, если не был подписан)"
-        # Чтобы отловить некорректный запрос, необходимо выполнить
-        # проверку отсутствия подписки (в случае DELETE, ниже) и
-        # проверку наличия подписки (в случае POST, выше)
         if is_subscribed:
-            is_subscribed.delete()
+            Subscribtion.objects.filter(user=user, author=author).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
             {
@@ -155,7 +151,9 @@ class RecipeViewSet(ModelViewSet):
         """Обработка Избранного (Favorite)."""
         recipe = get_object_or_404(Recipe, id=self.kwargs.get("pk"))
         user = request.user
-        in_favorite = Favorite.objects.filter(recipe=recipe, user=user)
+        in_favorite = Favorite.objects.filter(
+            recipe=recipe, user=user
+        ).exists()
         # Блок POST-запроса
         if request.method == "POST":
             # Проверка наличия в Избранном
@@ -177,7 +175,7 @@ class RecipeViewSet(ModelViewSet):
             )
         # Блок DELETE-запроса
         if in_favorite:
-            in_favorite.delete()
+            Favorite.objects.filter(recipe=recipe, user=user).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
             # ReDoc: "errors": "string"
@@ -198,7 +196,7 @@ class RecipeViewSet(ModelViewSet):
         recipe = get_object_or_404(Recipe, id=self.kwargs.get("pk"))
         in_shopping_cart = ShoppingCart.objects.filter(
             user=request.user, recipe=recipe
-        )
+        ).exists()
         # Блок POST-запроса
         if request.method == "POST":
             if in_shopping_cart:
@@ -218,7 +216,9 @@ class RecipeViewSet(ModelViewSet):
                 )
         # Блок DELETE-запроса
         if in_shopping_cart:
-            in_shopping_cart.delete()
+            ShoppingCart.objects.filter(
+                user=request.user, recipe=recipe
+            ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
             # ReDoc: "errors": "string"
