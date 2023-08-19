@@ -23,7 +23,10 @@ from .serializers import (FavoriteSerializer, IngredientSerializer,
 
 
 class CustomUserViewSet(UserViewSet):
-    """Viewset для пользователя / подписок."""
+    """
+    Viewset для Пользователя (CustomUser) и
+    Подписок (Subscriptions) Пользователя (CustomUser).
+    """
 
     @action(
         detail=False, permission_classes=(IsAuthenticated,), methods=["GET"]
@@ -81,11 +84,15 @@ class CustomUserViewSet(UserViewSet):
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         # Блок DELETE-запроса
+        # Согласно ReDoc в случае некорректного запроса
+        # требуется выдать ошибку 400 с описанием причины:
+        # "Reoc: 400 Ошибка подписки (Например, если не был подписан)"
+        # Чтобы отловить некорректный запрос, необходимо выполнить
+        # проверку отсутствия подписки (в случае DELETE, ниже) и
+        # проверку наличия подписки (в случае POST, выше)
         if is_subscribed:
             is_subscribed.delete()
-            return Response(
-                "Успешная отписка", status=status.HTTP_204_NO_CONTENT
-            )
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
             {
                 "errors": (

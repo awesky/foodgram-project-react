@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", default="Empty")
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -156,6 +156,7 @@ DJOSER = {
     },
     # Custom settings
     "LOGIN_FIELD": "email",
+    "HIDE_USERS": False,
 }
 
 REST_FRAMEWORK = {

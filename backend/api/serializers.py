@@ -378,10 +378,7 @@ class FavoriteSerializer(ModelSerializer):
         model = Favorite
         fields = (
             # ReDoc: "id", "name", "image", "cooking_time"
-            "id",
-            "name",
-            "image",
-            "cooking_time",
+            "id", "name", "image", "cooking_time",
         )
 
 

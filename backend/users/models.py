@@ -81,11 +81,13 @@ class Subscribtion(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         related_name="user",
+        verbose_name="Пользователь",
     )
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
         related_name="author",
+        verbose_name="Автор",
     )
 
     def __str__(self):
