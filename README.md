@@ -1,3 +1,9 @@
+> Host IP: http://130.193.53.150/
+> 
+> Admin email: ```me@awesky.ru```
+> 
+> Admin password: ```Qwerty321!```
+
 <sub>Заполнениние README.md выполнено на GitHub с применением разметки [Markdown](https://docs.github.com/ru/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).</sub>
 
 ![Workflow status](https://github.com/awesky/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
