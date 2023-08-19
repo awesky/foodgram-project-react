@@ -35,39 +35,49 @@ __<details><summary>Запуск проекта на удаленном серв
 
 4. Задайте значения переменным в GitHub - Settings - (Secuity) Secrets and variables - Actions
 
-    ```SECRET_KEY```      секретный ключ Django-проекта
-    
-    ```HOST```            публичный IP сервера
-    
-    ```USER```            имя пользователя на сервере
-    
-    ```SSH_KEY```         приватный ssh-ключ
-    
-    ```PASSPHRASE```      пароль ssh-ключа
-    
-    ```DOCKER_PASSWORD``` пароль от DockerHub
-    
-    ```DOCKER_USERNAME``` логин DockerHub
-    
-    ```DB_HOST```         db (установить указанное значение)
+      ```HOST```                  публичный IP сервера
+      
+      ```USER```                  имя пользователя на сервере
+      
+      ```SSH_KEY```               приватный ssh-ключ
+      
+      ```PASSPHRASE```            пароль ssh-ключа (при наличии)
+      
+      ```DOCKER_PASSWORD```       пароль от DockerHub
+      
+      ```DOCKER_USERNAME```       логин DockerHub
+   
+      ```SECRET_KEY```            секретный ключ Django-проекта
+      
+      ```DB_ENGINE```             django.db.backends.postgresql (установить указанное значение)
+      
+      ```DB_HOST```               db (установить указанное значение)
 
-5. Запустите GitHub Workflow ([официальная документация](https://docs.github.com/ru/actions/using-workflows/manually-running-a-workflow))
+      ```DB_PORT```               порт подключения к базе данных
+      
+      ```DB_NAME```               имя базы данных
+      
+      ```POSTGRES_USER```         логин для подключения к базе данных
+      
+      ```POSTGRES_PASSWORD```     пароль для подключения к базе данных
 
-6. Сервис будет доступен по адресу: [http://84.201.161.196/](http://84.201.161.196/)
+6. Запустите GitHub Workflow ([официальная документация](https://docs.github.com/ru/actions/using-workflows/manually-running-a-workflow))
+
+7. Сервис будет доступен по адресу: [http://84.201.161.196/](http://84.201.161.196/)
 
     <sup>_(пример для сервера с публичным IP-адресом "84.201.161.196")_</sup>
     
-7. Создайте суперпользователя для администрирования проекта на сервере
+8. Создайте суперпользователя для администрирования проекта на сервере
     
     ```
     sudo docker-compose exec backend python manage.py createsuperuser
     ```
 
-8. Панель администратора доступна по адресу: [http://84.201.161.196/admin](http://84.201.161.196/admin)
+9. Панель администратора доступна по адресу: [http://84.201.161.196/admin](http://84.201.161.196/admin)
 
     <sup>_(пример для сервера с публичным IP-адресом "84.201.161.196")_</sup>
     
-9. (По желанию) загрузите подготовленную базу ингредиентов
+10. (По желанию) загрузите подготовленную базу ингредиентов
     
     ```
     sudo docker-compose exec backend python manage.py load_ingredients
