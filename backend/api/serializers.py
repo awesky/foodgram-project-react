@@ -297,10 +297,12 @@ class RecipeWriteSerializer(ModelSerializer):
             ingredient = get_object_or_404(Ingredient, name=item["id"])
             err = []
             if ingredient in ingredients_list:
-                err.append(f"Ингредиент id={ingredient.id} повторяется.")
+                err.append(
+                    f"'{ingredient.name}' id={ingredient.id} повторяется."
+                )
             if int(item["amount"]) < 1:
                 err.append(
-                    f"Ингредиента id={ingredient.id} должно быть больше 0."
+                    f"Кол-во '{ingredient.name}' id={ingredient.id} меньше 1."
                 )
             if err:
                 error_msg.append(err)
