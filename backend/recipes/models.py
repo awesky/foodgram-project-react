@@ -163,7 +163,7 @@ class RecipeIngredient(models.Model):
     )
     ingredient = models.ForeignKey(
         Ingredient,
-        on_delete=models.SET("Ингредиент был удален."),
+        on_delete=models.CASCADE,
         related_name="recipe_ingredient",
         verbose_name="Ингредиент",
     )
@@ -194,7 +194,7 @@ class Favorite(models.Model):
 
     recipe = models.ForeignKey(
         Recipe,
-        on_delete=models.SET("Рецепт был удален."),
+        on_delete=models.CASCADE,
         related_name="favorite",
         verbose_name="Рецепт",
     )
